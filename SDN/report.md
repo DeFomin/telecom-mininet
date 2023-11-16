@@ -1,4 +1,4 @@
-![image](https://github.com/DeFomin/telecom-mininet/assets/90705279/ee21e7ff-c611-40b2-a83d-f457a163e177)University: [ITMO University](https://itmo.ru/ru/)  
+University: [ITMO University](https://itmo.ru/ru/)  
 Faculty: [FICT](https://fict.itmo.ru)  
 Course: Principles of designing telecommunication networks  
 Year: 2023/2024  
