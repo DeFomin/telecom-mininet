@@ -1,4 +1,4 @@
-University: [ITMO University](https://itmo.ru/ru/)  
+![image](https://github.com/DeFomin/telecom-mininet/assets/90705279/ee21e7ff-c611-40b2-a83d-f457a163e177)University: [ITMO University](https://itmo.ru/ru/)  
 Faculty: [FICT](https://fict.itmo.ru)  
 Course: Principles of designing telecommunication networks  
 Year: 2023/2024  
@@ -10,6 +10,7 @@ Author: Fomintsev Denis Ruslanovich
 - [Упражнение 1](#section1)
 - [Упражнение 2](#section2)
 - [Упражнение 3](#section3)
+- [Вывод](#section4)
 
 ## <a name="section1">Упражнение 1</a>
 1. Предварительно я скачал официальную виртуальную машину mininet и настроил сеть на "Виртуальный адаптер хоста", чтобы без проблем по ssh подключаться к mininet машине (рисунок 1).  
@@ -124,10 +125,77 @@ pox.py log.level --DEBUG forwarding.hub
 
 3. Проверка поведения хаба с помощью tcpdump. Для этого необходимо убедиться, что хосты могут пинговать друг друга и что все узлы видят один и тот же трафик - поведение концентратора. Мы создадим xterms для каждого хоста и просмотрим трафик в каждом.
 
-При этом прищлось решить проблему с подключением к графическому интерфейсу X.
+При этом появилась проблема с подключением к графическому интерфейсу X. Для этого мне пришлось переключить машину mininet на сеть NAT и пробросить через 2222 порт хоста к 22 порту mininet и установить X-сервер
+
+<p align="center"><img src="https://github.com/DeFomin/telecom-mininet/assets/90705279/2779b584-d1bf-4247-ba47-e7fe724ed102"></p>
+
+<p align="center">
+  <em>Рисунок 11: Установка X-сервера</em> 
+</p>
+
+```
+sudo apt-get install xorg
+```
+А также настроить его:
+```
+sudo chmod g+rw /tmp/.X11-unix/X0
+export DISPLAY=:0
+```
+
+<p align="center"><img src="https://github.com/DeFomin/telecom-mininet/assets/90705279/2b05a020-158c-44a6-9847-58806be68b4b"></p>
+
+<p align="center">
+  <em>Рисунок 11: Настройка X-сервера</em> 
+</p>
+
+После этого в самой виртуальной машине появилось только 1 окно. Для решения данной проблемы я переподключился к машине mininet через команду ```ssh -X -p 2222 mininet@localhost``` (Рисунок 12)
+
+<p align="center"><img src="https://github.com/DeFomin/telecom-mininet/assets/90705279/c27e2cb4-3ed4-46cc-93b3-fd4dca714711"></p>
+
+<p align="center">
+  <em>Рисунок 12: Запуск 3-ех xterm</em> 
+</p>
+
+В xterms для h2 и h3 я запустил tcpdump утилиту для печати пакетов, просматриваемых хостом:  
+```tcpdump -XX -n -i h2-eth0``` (Рисунок 14)  
+```tcpdump -XX -n -i h3-eth0``` (Рисунок 13)  
+В xterm для h1 запустил пинг:  
+```ping -c1 10.0.0.2```  
+
+Пакеты ping теперь идут к контроллеру, который затем посылает их на все интерфейсы, кроме
+отправляющего.
 
 
+<p align="center"><img src="https://github.com/DeFomin/telecom-mininet/assets/90705279/e9e99083-060c-4dc4-b015-d63336e5c4c3"></p>
 
+<p align="center">
+  <em>Рисунок 13: Node 3</em> 
+</p>
+
+<p align="center"><img src="https://github.com/DeFomin/telecom-mininet/assets/90705279/df5a8908-6915-4939-9022-3d9ff21d8709"></p>
+
+<p align="center">
+  <em>Рисунок 14: Node 2</em> 
+</p>
+
+Как можно видеть хост существует и доступен (Рисунок 15)
+
+<p align="center"><img src="https://github.com/DeFomin/telecom-mininet/assets/90705279/3d2c65a3-32f9-4bdc-af97-e87c973a23b5"></p>
+
+<p align="center">
+  <em>Рисунок 15: Работа сети</em> 
+</p>
+
+4. Затем, был пропингован несуществующий хост (Рисунок 16). Видно что хост не доступен Destination Host Unreachable.  
+
+<p align="center"><img src="https://github.com/DeFomin/telecom-mininet/assets/90705279/a66e5a2c-b1b0-4d4e-864c-9308899c4e77"></p>
+
+<p align="center">
+  <em>Рисунок 16: Проверка несуществующего адреса</em> 
+</p>
+
+## <a name="section4">Вывод</a>
+В результате выполнения упражнений я познакомился с mininet, с построением базовых топологий, таких как линейная и древовидная. Развернул собственную симуляцию сети с n количеством разветвлений топологии дерева. Развернул хаб для контроллера POX, установил и настроил x-сервер, провел базовые операции с xterm через tcpdump и ping в сети.
 
 
 
